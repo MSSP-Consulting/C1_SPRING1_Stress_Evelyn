@@ -1,0 +1,120 @@
+---
+title: "Descriptive Stats"
+author: "Danya Zhang"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
+```
+
+```{r}
+#read in the data
+library(readxl)
+df_demographics <- read_excel("Stress, Empathy and Self-care_MASTER.xlsx", sheet = "Demographics")
+df_demographics <- df_demographics[,2:dim(df_demographics)[2]] #delete first column
+
+#set column names
+column_names <- as.character(df_demographics[1,])
+colnames(df_demographics) <- column_names
+df_demographics <- df_demographics[2:dim(df_demographics)[1],]
+
+#check how many NA
+sum(!complete.cases(df_demographics)) #20
+df_demographics <- df_demographics[complete.cases(df_demographics), ] #remove rows #question uneven df's is this smart
+```
+
+```{r}
+#data cleaning for chart making
+#shorten survey answers for Working column
+library(dplyr)
+df_demographics_clean <- df_demographics %>%
+  mutate(Working = recode(Working, 
+                     "Yes, 20-30 hours a week" = "20-30",
+                     "Yes, 10-20 hours a week" = "10-20",
+                     "Yes, less than 10 hours a week" = "<10",
+                     "Yes, more than 40 hours a week" = ">40",
+                     "Yes, 30-40 hours a week" = "30-40")) %>%
+  rename("Working(hrs/wk)" = "Working")
+```
+
+```{r}
+#What are the demographics of your population?
+#some graphs
+library(ggplot2)
+#barchart for age range
+ggplot(df_demographics_clean, aes(`Age range`)) +
+  geom_bar(fill = "#45B39D") +
+  theme_bw()
+
+#barchart for program year
+ggplot(df_demographics_clean, aes(`Program Year`)) +
+  geom_bar(fill = "#5DADE2") +
+  theme_bw() #good mix of first and second years
+
+#reorder so barchat x-axis categories are in order
+df_demographics_clean$`Working(hrs/wk)` <- factor(df_demographics_clean$`Working(hrs/wk)`,                                    levels = c("No", "<10", "10-20", "20-30", "30-40", ">40"))
+ggplot(df_demographics_clean, aes(`Working(hrs/wk)`)) +
+  geom_bar(fill = "#A569BD") +
+  theme_bw() #frequency of people working decreases as hours increase
+```
+
+```{r}
+#read in psq data
+df_psq <- read_excel("Stress, Empathy and Self-care_MASTER.xlsx", sheet = "PSQ")
+df_psq <- df_psq[,2:dim(df_psq)[2]]
+#delete first column
+
+#set column names
+column_names <- as.character(df_psq[1,])
+colnames(df_psq) <- column_names
+df_psq <- df_psq[2:dim(df_psq)[1],]
+df_psq$`PSQ Score` <- as.numeric(df_psq$`PSQ Score`)
+
+#check how many NA
+sum(!complete.cases(df_psq)) #15
+df_psq <- na.omit(df_psq) #remove rows
+
+#read in iri data
+df_iri <- read_excel("Stress, Empathy and Self-care_MASTER.xlsx", sheet = "IRI")
+df_iri <- df_iri[,2:dim(df_iri)[2]] #delete first column
+#convert all scores to numeric
+df_iri$`IRI Score` <- as.numeric(df_iri$`IRI Score`)
+df_iri$`IRI- FS` <- as.numeric(df_iri$`IRI- FS`)
+df_iri$`IRI- EC` <- as.numeric(df_iri$`IRI- EC`)
+df_iri$`IRI- PT` <- as.numeric(df_iri$`IRI- PT`)
+df_iri$`IRI- PD` <- as.numeric(df_iri$`IRI- PD`)
+
+#set column names
+column_names <- as.character(df_iri[1,])
+colnames(df_iri) <- column_names
+df_iri <- df_iri[2:dim(df_iri)[1],]
+```
+
+```{r}
+#What are the scores like on PSQ?
+#PSQ stats
+summary(df_psq$`PSQ Score`) #max possible psq score 80, min 20
+
+#histogram #question about bin size
+ggplot(df_psq, aes(x=`PSQ Score`)) + 
+  geom_histogram(color = "black",fill="#34495E", bins = 15) +
+  scale_x_continuous(breaks = seq(0, 80, by=10)) 
+```
+
+```{r}
+#What are the scores like on IRI?
+#summary stats
+summary(df_iri$`IRI Score`) 
+summary(df_iri$`IRI- FS`) 
+summary(df_iri$`IRI- EC`) 
+summary(df_iri$`IRI- PT`) 
+summary(df_iri$`IRI- PD`) 
+
+#graph for IRI Score
+ggplot(df_iri, aes(x=`IRI Score`)) + 
+  geom_histogram(color = "black",fill="#CD6155", bins = 15) 
+```
+
+

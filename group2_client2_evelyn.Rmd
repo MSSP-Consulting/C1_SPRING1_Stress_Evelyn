@@ -1,0 +1,547 @@
+---
+title: "group2_client2_evelyn"
+author: "Hanzhang Song"
+date: "2023-02-09"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Loading data
+
+```{r}
+library(readxl)
+library(ggplot2)
+library(tidyverse)
+library(dplyr)
+raw_data <- read_excel("~/Desktop/BU/MSSP/MA 676/consulting/c2/Stress, Empathy and Self-care_MASTER.xlsx")
+```
+
+## Q1: Is there a particular demographic that is scoring higher in PSQ?
+
+```{r}
+df1 <- raw_data[c(1,77:89)]
+names(df1) <- df1[1,]
+df1 <- df1[-1,]
+names(df1)[1] <- "Participant"
+```
+
+```{r}
+df1 <- na.omit(df1)
+# Program Year
+df1$`PSQ Score` <- as.numeric(df1$`PSQ Score`)
+ggplot(df1, aes(x = `PSQ Score`, y = `Program Year`, fill = `Program Year`)) + 
+  geom_boxplot()
+
+# Age
+ggplot(df1, aes(x = `PSQ Score`, y = Age, fill = Age)) + 
+  geom_boxplot()
+
+# Location
+ggplot(df1, aes(x = `PSQ Score`, y = Location)) + 
+  geom_boxplot()
+
+# Race
+ggplot(df1, aes(x = `PSQ Score`, y = `Which of the following best describes you? (select all that apply)`)) + 
+  geom_boxplot() + 
+  ylab("Race")
+
+# Transgender or not
+ggplot(df1, aes(x = `PSQ Score`, y = `Do you identify as transgender?`)) + 
+  geom_boxplot() + 
+  ylab("Transgender or not")
+
+# Gender
+ggplot(df1, aes(x = `PSQ Score`, y = `Which of the following best describes your gender?`)) + 
+  geom_boxplot() + 
+  ylab("Gender")
+
+# Sexual orientation
+ggplot(df1, aes(x = `PSQ Score`, y = `What is your sexual orientation?`)) + 
+  geom_boxplot() + 
+  ylab("Sexual Orientation")
+
+# Relationship status
+ggplot(df1, aes(x = `PSQ Score`, y = `What best describes you relationship status?`)) + 
+  geom_boxplot() + 
+  ylab("Relationship status")
+
+# Having children or not
+ggplot(df1, aes(x = `PSQ Score`, y = `Do you have any children?`)) + 
+  geom_boxplot() + 
+  ylab("Having children or not")
+
+# Relocation
+ggplot(df1, aes(x = `PSQ Score`, y = `Did you relocate to attend your program?`)) + 
+  geom_boxplot() + 
+  ylab("Relocation")
+
+# Income
+ggplot(df1, aes(x = `PSQ Score`, y = `Do you identify as coming from low socioeconomic status?`)) + 
+  geom_boxplot() + 
+  ylab("Income")
+
+# Working hours
+ggplot(df1, aes(x = `PSQ Score`, y = `Do you work while enrolled in your program support yourself?`)) + 
+  geom_boxplot() + 
+  ylab("Working hours")
+```
+
+## Q2: Is there a particular stressor(eg. academic, financial, etc) that is rated higher?
+
+```{r}
+df2 <- read_excel("~/Desktop/BU/MSSP/MA 676/consulting/c2/Stress, Empathy and Self-care_MASTER.xlsx", sheet = "Stress Questions")
+names(df2) <- df2[1,]
+df2 <- df2[-1,]
+names(df2)[1] <- "Participant"
+```
+
+```{r}
+df2 <- na.omit(df2)
+ggplot(data = df2, aes(`Financial stress`, fill = `Financial stress`)) +
+  geom_bar() + 
+  scale_fill_manual(values = c("#91bad6","#528aae","#bcdae8","#1e3f66")) + 
+  geom_text(aes(label = ..count..), stat = "count", vjust = -1, colour = "black") + 
+  scale_x_discrete(limits = c("Severe stress", "Moderate stress", "Mild stress", "None"))
+
+ggplot(data = df2, aes(`Physical health stress`, fill = `Physical health stress`)) + 
+  geom_bar() + 
+  scale_fill_manual(values = c("#91bad6","#528aae","#bcdae8","#1e3f66")) +
+  geom_text(aes(label = ..count..), stat = "count", vjust = -1, colour = "black") + 
+  scale_x_discrete(limits = c("Severe stress", "Moderate stress", "Mild stress", "None"))
+
+ggplot(data = df2, aes(`Relationship stress`, fill = `Relationship stress`)) +
+  geom_bar() + 
+  scale_fill_manual(values = c("#91bad6","#528aae","#bcdae8","#1e3f66")) +
+  geom_text(aes(label = ..count..), stat = "count", vjust = -1, colour = "black") + 
+  scale_x_discrete(limits = c("Severe stress", "Moderate stress", "Mild stress", "None"))
+
+ggplot(data = df2, aes(`Family stress`, fill = `Family stress`)) +
+  geom_bar() + 
+  scale_fill_manual(values = c("#91bad6","#528aae","#bcdae8","#1e3f66")) +
+  geom_text(aes(label = ..count..), stat = "count", vjust = -1, colour = "black") + 
+  scale_x_discrete(limits = c("Severe stress", "Moderate stress", "Mild stress", "None"))
+
+ggplot(data = df2, aes(`Academic stress`, fill = `Academic stress`)) +
+  geom_bar() + 
+  scale_fill_manual(values = c("#91bad6","#528aae","#bcdae8","#1e3f66")) +
+  geom_text(aes(label = ..count..), stat = "count", vjust = -1, colour = "black") + 
+  scale_x_discrete(limits = c("Severe stress", "Moderate stress", "Mild stress", "None"))
+
+ggplot(data = df2, aes(`Minority stress`, fill = `Minority stress`)) +
+  geom_bar() + 
+  scale_fill_manual(values = c("#91bad6","#528aae","#bcdae8","#1e3f66")) +
+  geom_text(aes(label = ..count..), stat = "count", vjust = -1, colour = "black") + 
+  scale_x_discrete(limits = c("Severe stress", "Moderate stress", "Mild stress", "None"))
+
+ggplot(data = df2, aes(`Grief and/or loss`, fill = `Grief and/or loss`)) +
+  geom_bar() + 
+  scale_fill_manual(values = c("#91bad6","#528aae","#bcdae8","#1e3f66")) +
+  geom_text(aes(label = ..count..), stat = "count", vjust = -1, colour = "black") + 
+  scale_x_discrete(limits = c("Severe stress", "Moderate stress", "Mild stress", "None"))
+```
+
+## Q3: What are the most utilized forms of self-care?
+
+```{r}
+# We have 217 responses from exercises, 210 for therapy frequencies, 523 for socializing frequencies, and 61 for spiritual, and 186 for others.
+raw_data %>%
+  group_by(Q88_3_TEXT) %>%
+  summarise(Count = n())
+# Reading, singing, and video games have more than one responses.
+```
+
+## Q4: Is there a difference in overall empathy scores between 1st and 2nd years?
+
+```{r}
+df4 <- raw_data[c(1,77,89:94)]
+names(df4) <- df4[1,]
+df4 <- df4[-1,]
+names(df4)[1] <- "Participant"
+```
+
+```{r}
+df4 <- na.omit(df4)
+df4$`PSQ Score` <- as.numeric(df4$`PSQ Score`)
+df4$`IRI Score` <- as.numeric(df4$`IRI Score`)
+df4$`IRI- Fantasy scale` <- as.numeric(df4$`IRI- Fantasy scale`)
+df4$`IRI- Empathy Concern` <- as.numeric(df4$`IRI- Empathy Concern`)
+df4$`IRI- Personal Distress` <- as.numeric(df4$`IRI- Personal Distress`)
+df4$`IRI- Perspective Taking` <- as.numeric(df4$`IRI- Perspective Taking`)
+```
+
+```{r}
+ggplot(df4, aes(x = `Program Year`, y = `IRI Score`, fill = `Program Year`)) + 
+  geom_boxplot()
+```
+
+## Q5: Is there a difference between 1st and 2nd years IRI scores when just considering subscales?
+
+```{r}
+df5 <- df4[c(1,2,5:7)]
+df5 <- na.omit(df5)
+
+ggplot(df5, aes(x = `Program Year`, y = `IRI- Fantasy scale`, fill = `Program Year`)) + 
+  geom_boxplot()
+ggplot(df5, aes(x = `Program Year`, y = `IRI- Empathy Concern`, fill = `Program Year`)) + 
+  geom_boxplot()
+ggplot(df5, aes(x = `Program Year`, y = `IRI- Perspective Taking`, fill = `Program Year`)) + 
+  geom_boxplot()
+
+df5 <- df5 %>%
+  mutate(`Empathy Concern + Perspective Taking` = 
+           rowSums(across(c("IRI- Empathy Concern", "IRI- Perspective Taking"))),
+         `Empathy Concern + Perspective Taking + Fantasy scale` = 
+           rowSums(across(c("IRI- Fantasy scale", "IRI- Empathy Concern", "IRI- Perspective Taking"))))
+
+ggplot(df5, aes(x = `Program Year`, y = `Empathy Concern + Perspective Taking`, fill = `Program Year`)) + 
+  geom_boxplot()
+ggplot(df5, aes(x = `Program Year`, y = `Empathy Concern + Perspective Taking + Fantasy scale`, fill = `Program Year`)) + 
+  geom_boxplot()
+```
+
+## Q6: Is there a difference in stress scores between 1st and 2nd years?
+
+```{r}
+df6 <- df4[c(1:3)]
+df6 <- na.omit(df6)
+ggplot(df6, aes(x = `PSQ Score`, y = `Program Year`)) + geom_boxplot()
+```
+
+## Q7: Is there a particular demographic that is scoring higher in PSQ?
+
+```{r}
+demo <- read_excel("~/Desktop/BU/MSSP/MA 676/consulting/c2/Stress, Empathy and Self-care_MASTER.xlsx", sheet = "Demographics")
+psq <- read_excel("~/Desktop/BU/MSSP/MA 676/consulting/c2/Stress, Empathy and Self-care_MASTER.xlsx", sheet = "PSQ")
+iri <- read_excel("~/Desktop/BU/MSSP/MA 676/consulting/c2/Stress, Empathy and Self-care_MASTER.xlsx", sheet = "IRI")
+```
+
+```{r}
+names(demo) <- demo[1,]
+demo <- demo[-1,]
+names(demo)[1] <- "Participant"
+
+names(psq) <- psq[1,]
+psq <- psq[-1,]
+names(psq)[1] <- "Participant"
+
+names(iri) <- iri[1,]
+iri <- iri[-1,]
+names(iri)[1] <- "Participant"
+
+psq <- psq[22]
+iri <- iri[c(30:34)]
+df7 <- cbind(demo,psq,iri)
+```
+
+```{r}
+df7 <- df7 %>% 
+  mutate_at(c('PSQ Score', 'IRI Score', 'IRI- FS', 'IRI- EC', 'IRI- PD', 'IRI- PT'),
+            as.numeric)
+```
+
+```{r}
+# First year = 1, second year = 0
+year <- ifelse(df7$`Program Year` == 'Current first year', 1, 0)
+
+df_py <- data.frame(Year = year,
+                    PSQ = df7$`PSQ Score`)
+
+fit.year = lm(formula = PSQ ~ Year, data = df_py)
+summary(fit.year)
+```
+
+```{r}
+# Age range
+age.order <- factor(df7$`Age range`)
+
+df_age <- data.frame(Age = age.order,
+                    PSQ = df7$`PSQ Score`)
+
+fit.age = lm(formula = PSQ ~ Age, data = df_age)
+summary(fit.age)
+```
+
+```{r}
+# Program Location
+loc.order <- factor(df7$`Program Location`)
+
+df_loc <- data.frame(Reg = loc.order,
+                    PSQ = df7$`PSQ Score`)
+
+fit.loc = lm(formula = PSQ ~ Reg, data = df_loc)
+summary(fit.loc)
+```
+
+```{r}
+# Race
+eth.order <- factor(df7$`Race/Ethnicity`)
+
+df_eth <- data.frame(Race = eth.order,
+                    PSQ = df7$`PSQ Score`)
+
+fit.eth = lm(formula = PSQ ~ Race, data = df_eth)
+summary(fit.eth)
+```
+
+```{r}
+# Trans
+trans.order <- factor(df7$Transgender)
+
+df_trans <- data.frame(Trans = trans.order,
+                    PSQ = df7$`PSQ Score`)
+
+fit.trans = lm(formula = PSQ ~ Trans, data = df_trans)
+summary(fit.trans)
+```
+
+```{r}
+# Gender
+sex.order <- factor(df7$Gender)
+
+df_sex <- data.frame(Sex = sex.order,
+                    PSQ = df7$`PSQ Score`)
+
+fit.sex = lm(formula = PSQ ~ Sex, data = df_sex)
+summary(fit.sex)
+```
+
+```{r}
+# Sexual orientation
+ori.order <- factor(df7$`Sexual orientation`)
+
+df_ori <- data.frame(Ori = ori.order,
+                    PSQ = df7$`PSQ Score`)
+
+fit.ori = lm(formula = PSQ ~ Ori, data = df_ori)
+summary(fit.ori)
+```
+
+```{r}
+# Relationship status
+rel.order <- factor(df7$`Relationship status`)
+
+df_rel <- data.frame(Rel = rel.order,
+                    PSQ = df7$`PSQ Score`)
+
+fit.rel = lm(formula = PSQ ~ Rel, data = df_rel)
+summary(fit.rel)
+```
+
+```{r}
+# Have kids = 1, no = 0
+kids <- ifelse(df7$`Have Kids` == 'Yes', 1, 0)
+
+df_kids <- data.frame(Kids = kids,
+                    PSQ = df7$`PSQ Score`)
+
+fit.kids = lm(formula = PSQ ~ Kids, data = df_kids)
+summary(fit.kids)
+```
+
+```{r}
+# Relocate = 1, no = 0
+move <- ifelse(df7$Relocate == 'Yes', 1, 0)
+
+df_move <- data.frame(Move = move,
+                    PSQ = df7$`PSQ Score`)
+
+fit.move = lm(formula = PSQ ~ Move, data = df_move)
+summary(fit.move)
+```
+
+```{r}
+# Low ses = 1, no = 0
+ses <- ifelse(df7$`Low SES` == 'Yes', 1, 0)
+
+df_ses <- data.frame(Ses = ses,
+                    PSQ = df7$`PSQ Score`)
+
+fit.ses = lm(formula = PSQ ~ Ses, data = df_ses)
+summary(fit.ses)
+```
+
+```{r}
+# Working
+work.order <- factor(df7$Working)
+
+df_work <- data.frame(Work = work.order,
+                    PSQ = df7$`PSQ Score`)
+
+fit.work = lm(formula = PSQ ~ Work, data = df_work)
+summary(fit.work)
+```
+
+## Q8: Is it possible to obtain a visual for PSQ vs specific demographics in particular?
+
+```{r}
+# PSQ vs. low SES
+df8 <- df7[c(1,12,14)]
+df8 <- df8[df8$`Low SES` == 'No',]
+hist(df8$`PSQ Score`, main = "Histogram of PSQ for Low SES",
+     xlab = "PSQ Score", col = "#FFF0A5", border = "#9BD6E6")
+hist(df8$`PSQ Score`, main = "Histogram of PSQ for non-low SES",
+     xlab = "PSQ Score", col = "#D49AB3", border = "#7A93B2")
+```
+
+```{r}
+# PSQ vs. sexual orientation
+ggplot(df1, aes(x = `PSQ Score`, y = `What is your sexual orientation?`)) + 
+  geom_boxplot() + 
+  ylab("Sexual Orientation")
+```
+
+```{r}
+# PSQ in males vs. females
+ggplot(df1, aes(x = `PSQ Score`, y = `Which of the following best describes your gender?`)) + 
+  geom_boxplot() + 
+  ylab("Gender")
+```
+
+```{r}
+# PSQ vs. Race
+ggplot(df1, aes(x = `PSQ Score`, y = `Which of the following best describes you? (select all that apply)`)) + 
+  geom_boxplot() + 
+  ylab("Race")
+```
+
+## Q9: Self-care visuals
+
+```{r}
+df9 <- read_excel("~/Desktop/BU/MSSP/MA 676/consulting/c2/Stress, Empathy and Self-care_MASTER.xlsx", sheet = "Self Care (Cleaned)")
+names(df9) <- df9[1,]
+df9 <- df9[-1,]
+names(df9)[1] <- "Participant"
+df9 <- cbind(df9,psq)
+df9$`PSQ Score` <- as.numeric(df9$`PSQ Score`)
+```
+
+```{r}
+# PSQ vs. any exercise
+ggplot(df9, aes(x = `PSQ Score`, y = `Any exercise?`)) + geom_boxplot()
+```
+
+```{r}
+# PSQ vs. any spiritual
+ggplot(df9, aes(x = `PSQ Score`, y = `Any spiritual?`)) + geom_boxplot()
+```
+
+```{r}
+# PSQ vs. any other
+ggplot(df9, aes(x = `PSQ Score`, y = `Any Other?`)) + geom_boxplot()
+```
+
+```{r}
+fit.1 <- lm(`IRI Score` ~ `PSQ Score`, data = df7)
+summary(fit.1)
+ggp <- ggplot(df7, aes(`PSQ Score`, `IRI Score`)) +           
+  geom_point()
+ggp +                                     
+  stat_smooth(method = "lm",
+              formula = y ~ x,
+              geom = "smooth")
+# Residual plot
+res <- resid(fit.1)
+plot(fitted(fit.1), res)
+abline(0,0)
+```
+
+# IRI Calculation
+```{r}
+df10 <- df4 %>%
+  mutate(`4 subscales sum` = 
+           rowSums(across(c("IRI- Empathy Concern", "IRI- Perspective Taking", "IRI- Fantasy scale", "IRI- Personal Distress"))))
+df10 <- df10[c(1,4:9)]
+```
+
+
+# ANOVA: IRI vs. Program Year
+```{r}
+year <- ifelse(df7$`Program Year` == 'Current first year', 1, 0)
+
+iri_py <- data.frame(Year = year,
+                    IRI = df7$`IRI Score`)
+
+fit.3 <- lm(formula = IRI ~ Year, data = iri_py)
+summary(fit.3)
+```
+
+```{r}
+df11 <- df4[df4$`Program Year` == 'Current first year',]
+hist(df11$`PSQ Score`, main = "Histogram of PSQ for 1st year",
+     xlab = "PSQ Score", col = "#D49AB3", border = "#7A93B2")
+```
+
+```{r}
+df9 <- read_excel("~/Desktop/BU/MSSP/MA 676/consulting/c2/Stress, Empathy and Self-care_MASTER.xlsx", sheet = "Self Care (Cleaned)")
+names(df9) <- df9[1,]
+df9 <- df9[-1,]
+names(df9)[1] <- "Participant"
+`Program Year` <- df7$`Program Year`
+df9 <- cbind(df9,psq,iri,`Program Year`)
+df9$`IRI Score` <- as.numeric(df9$`IRI Score`)
+df9$`PSQ Score` <- as.numeric(df9$`PSQ Score`)
+df9$`Therapy frequency` <- as.numeric(df9$`Therapy frequency`)
+```
+
+```{r}
+aov1 <- aov(`IRI Score` ~ `Program Year` + `PSQ Score` + `Any exercise?` + `Therapy frequency`, data = df9)
+summary.lm(aov1)
+
+resd <- resid(aov1)
+plot(fitted(aov1), resd)
+abline(0,0)
+
+iri_aov_augment <- broom::augment(aov1, df9)
+ggplot(iri_aov_augment, aes(sample = .resid)) + 
+  labs(title = "QQ Plot for residuals of IRI vs. Program Year",
+       x = "theoretical", y = "sample") + 
+  geom_qq() + 
+  geom_qq_line()
+```
+
+
+```{r}
+fit.4 <- lm(`IRI Score` ~ `Program Year` + `PSQ Score` + `Any exercise?` + `Therapy frequency`, data = df9)
+summary(fit.4)
+```
+
+```{r}
+fit.5 <- lm(`IRI Score` ~ `PSQ Score` + `Any exercise?` + `Therapy frequency`, data = df9)
+summary(fit.5)
+resid <- resid(fit.5)
+plot(fitted(fit.5), resid)
+abline(0,0)
+```
+
+```{r}
+library(lmtest)
+lrtest(fit.4,fit.5)
+```
+
+
+
+
+
+
+
+```{r}
+aov2 <- aov(`PSQ Score` ~ `Program Year`, data = df7)
+summary.lm(aov2)
+
+psq_aov_augment <- broom::augment(aov2, df7)
+ggplot(psq_aov_augment, aes(sample = .resid)) + 
+  labs(title = "QQ Plot for residuals of PSQ vs. Program Year",
+       x = "theoretical", y = "sample") + 
+  geom_qq() + 
+  geom_qq_line()
+```
+
+
+
+
+
